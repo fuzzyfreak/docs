@@ -2,15 +2,15 @@
 
 fdelete()
 {
-    $SSHSTUFF \"say Deleting files 12 hours old or less\! $PF
+    say_this "say Deleting files 12 hours old or less!"
     for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +310 -print`; do echo "Deleting $i"; rm $i; done
         
         if [ "$?" -eq "0" ]; then
                 echo "Delete successfull" >> $TSOURCE/$FL
-                $SSHSTUFF \"say Delete successfull\! $PF
+                say_this "say Delete successfull!"
         else
                 echo "Delete failed" >> $TSOURCE/$FL
-                $SSHSTUFF \"say Delete failed\! $PF
+                say_this "say Delete failed!"
                 exit
         fi
 }
@@ -54,15 +54,15 @@ send_log()
 
 fcopy()
 {
-    $SSHSTUFF \"say Transfering files to NAS\! $PF
+    say_this "say Transfering files to NAS!"
     for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +1 -print`; do echo "Moving $i to NAS!"; cp -n $i $CPDEST; done
 
         if [ "$?" -eq "0" ]; then
                 echo "Transfer successfull" >> $TSOURCE/$FL
-                $SSHSTUFF \"say Transfer successfull\! $PF
+                say_this "say Transfer successfull!"
         else
                 echo "Transfer failed" >> $TSOURCE/$FL
-                $SSHSTUFF \"say transfer failed\! $PF
+                say_this "say transfer failed!"
                 send_log
                 exit
         fi
@@ -72,10 +72,10 @@ mount_checkNAS()
 {
     if grep -qs $CPDEST /proc/mounts; then
         echo "It's mounted." >> $TSOURCE/$FL
-        $SSHSTUFF \"say NAS mounted\! $PF
+        say_this "say NAS mounted!"
     else
         echo "It's not mounted." >> $TSOURCE/$FL
-        $SSHSTUFF \"say NSA not mounted backup failed\! $PF
+        say_this "say NSA not mounted backup failed!"
         send_log
         exit
     fi
@@ -85,10 +85,10 @@ mount_checkFON()
 {
     if grep -qs $MCFON /proc/mounts; then
         echo "It's mounted." >> $TSOURCE/$FL
-        $SSHSTUFF \"say FON mounted\! $PF
+        say_this "say FON mounted!"
     else
         echo "It's not mounted." >> $TSOURCE/$FL
-        $SSHSTUFF \"say FON not mounted backup failed\! $PF
+        say_this "say FON not mounted backup failed!"
         send_log
         exit
     fi
@@ -97,15 +97,15 @@ mount_checkFON()
 rsync_fun()
 {
     echo "Starting rsync" >> $TSOURCE/$FL
-    $SSHSTUFF \"say Starting backup there may be lag\! $PF
+    say_this "say Starting backup there may be lag!"
     rsync -avh $RSOURCE $RDEST
 
         if [ "$?" -eq "0" ]; then
             echo "rsync successfull" >> $TSOURCE/$FL
-            $SSHSTUFF \"say Backup successfull\! $PF
+            say_this "say Backup successfull!"
         else
             echo "rsync failed" >> $TSOURCE/$FL
-            $SSHSTUFF \"say Backup failed\! $PF
+            say_this "say Backup failed!"
             send_log
             exit
         fi
@@ -115,15 +115,15 @@ rsync_fun()
 tar_fun()
 {
     echo "Starting tar" >> $TSOURCE/$FL
-    $SSHSTUFF \"say Tar\'ing file no lag for users\! $PF
+    say_this "say Taring file no lag for users!"
     tar -zcvf $TSOURCE/ygc_$NOW.tar.gz $TSOURCE/yogscastCompletePlus
 
         if [ "$?" -eq "0" ]; then
             echo "tar successfull" >> $TSOURCE/$FL
-            $SSHSTUFF \"say Tar successfull\! $PF
+            say_this "say Tar successfull!"
         else
             echo "tar failed" >> $TSOURCE/$FL
-            $SSHSTUFF \"say Tar failed\! $PF
+            say_this "say Tar failed!"
             send_log
             exit
         fi
@@ -131,12 +131,12 @@ tar_fun()
 
 server_checker()
 {
-    $SSHSTUFF \"say Test $PF
-
+    
+    say_this "say Test"
         if [ "$?" -eq "0" ]; then
             echo "Server running!"
             echo "Server running" >> $TSOURCE/$FL
-            $SSHSTUFF \"say PASS\! $PF
+            say_this "say PASS!"
         else
             echo "Server not running" >> $TSOURCE/$FL
             send_log
@@ -144,18 +144,35 @@ server_checker()
         fi
 }
 
-save_off()
+# This say_this() is old use the other one
+#say_this()
+#{
+#    REEN="$(ssh -p 8989 192.168.1.101 screen -ls)"
+#    echo $REEN > playground/log/log.txt
+#    AWK="$(awk 'FNR == 1 { print $6 }' playground/log/log.txt)"
+#    NAME="$(echo $AWK)"
+#    ssh -p 8989 192.168.1.101 screen -S $NAME -p 0 -X stuff \"$1^M\"
+#}
+
+say_this()
 {
-    $SSHSTUFF \"say Saving world\! $PF
-    $SSHSTUFF \"save-off $PF
-    $SSHSTUFF \"save-all $PF
+    local name="$(ssh -p 8989 192.168.1.101 screen -ls | awk 'NR==2 {print $1}')"
+    echo "$1"
+    ssh -p 8989 192.168.1.101 screen -S "$name" -p 0 -X stuff \"$1^M\"
 }
 
-save_on()
-{
-    $SSHSTUFF \"say Level saving enabled\! $PF
-    $SSHSTUFF \"save-on $PF
-}
+#save_off()
+#{
+#    $SSHSTUFF \"say Saving world\! $PF
+#    $SSHSTUFF \"save-off $PF
+#    $SSHSTUFF \"save-all $PF
+#}
+
+#save_on()
+#{
+#    $SSHSTUFF \"say Level saving enabled\! $PF
+#    $SSHSTUFF \"save-on $PF
+#}
 
 exit_fun()
 {
@@ -174,7 +191,9 @@ backup_fun()
     make_log
     server_checker
 
-    save_off
+    say_this "say Save disabled for backups!"
+    say_this "save-off"
+    say_this "save-all"
 
     sleep 5
 
@@ -184,7 +203,7 @@ backup_fun()
     rsync_fun
 
 
-    save_on
+    say_this "save-on"
 
 
     tar_fun
@@ -197,6 +216,6 @@ backup_fun()
     #fdelete
 
 
-    $SSHSTUFF \"say Operations complete\! $PF
+    say_this "say Operations complete"
 }
 

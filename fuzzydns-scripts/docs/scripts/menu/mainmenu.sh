@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Main menu for something
+
 source scriptVars.sh
 source scriptFunc.sh
 source fileFunc.sh
@@ -10,13 +12,11 @@ while :
 do
     echo "---==MainMenu==---"
     echo " * 1: File Menu: "
-    echo " * 2: Echo an include!"
     echo " * quit: Exit!"
     read OPT1
 
     case $OPT1 in
         1) file_menu ;;
-        2) echo $TSOURCE ;;
         quit) exit_fun ;;
     esac
 

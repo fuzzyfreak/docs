@@ -4,6 +4,23 @@
 #source includes/scriptFunc.sh
 #source includes/scriptTest.sh
 
+
+file_list()
+{
+    cd $TSOURCE
+    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -print`;do echo "$i"; done
+}
+
+file_delete()
+{
+    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +720 -print`; do echo "Delete test $i"; done
+}
+
+file_copy()
+{
+    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +1 -print`; do echo "Moving $i to NAS!"; cp -n $i $CPDEST; done
+}
+
 file_menu()
 {
     while :
@@ -21,25 +38,8 @@ file_menu()
             3) file_delete ;;
             quit) break ;;
         esac
-
 read -p "Press any key to continue... " -n1 -s
 
-        clear
+    clear
     done
 }
-
-file_list()
-{
-    for i in `find $TSOURCE/*tar.gz -print | awk '{ print substr($1,25); }'`; do echo "$i"; done
-}
-
-file_delete()
-{
-    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +720 -print`; do echo "Delete test $i"; done
-}
-
-file_copy()
-{
-    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +1 -print`; do echo "Moving $i to NAS!"; cp -n $i $CPDEST; done
-}
-
