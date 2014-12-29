@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Main menu for something
+
 source scriptVars.sh
 source scriptFunc.sh
 source fileFunc.sh

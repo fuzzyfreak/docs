@@ -21,8 +21,6 @@ file_copy()
     for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +1 -print`; do echo "Moving $i to NAS!"; cp -n $i $CPDEST; done
 }
 
-# Added esac to fix case 
-
 file_menu()
 {
     while :
