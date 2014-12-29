@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source includes/scriptVars.sh
-source includes/scriptFunc.sh
+source scriptVars.sh
+source scriptFunc.sh
 source fileFunc.sh
 
 clear

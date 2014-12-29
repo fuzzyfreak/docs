@@ -13,13 +13,15 @@ file_list()
 
 file_delete()
 {
-    for i in `find $TSOURC/*tar.gz -maxdepth 1 -mmin +720 -print`; do echo "Delete test $i"; done
+    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +720 -print`; do echo "Delete test $i"; done
 }
 
 file_copy()
 {
     for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +1 -print`; do echo "Moving $i to NAS!"; cp -n $i $CPDEST; done
 }
+
+# Added esac to fix case 
 
 file_menu()
 {
@@ -37,6 +39,7 @@ file_menu()
             2) file_copy ;;
             3) file_delete ;;
             quit) break ;;
+        esac
 read -p "Press any key to continue... " -n1 -s
 
     clear
