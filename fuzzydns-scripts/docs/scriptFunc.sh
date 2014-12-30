@@ -1,19 +1,47 @@
 #!/bin/bash
 
-fdelete()
+fdelete_nas()
 {
-    say_this "say Deleting files 12 hours old or less!"
-    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +310 -print`; do echo "Deleting $i"; rm $i; done
-        
+    say_this "say Deleting files 48 hours old or more on nas!"
+    for i in $G24FILE; do echo "Files 48 hours or older on nas $i"; done
         if [ "$?" -eq "0" ]; then
                 echo "Delete successfull" >> $TSOURCE/$FL
                 say_this "say Delete successfull!"
-        else
+        else    
                 echo "Delete failed" >> $TSOURCE/$FL
                 say_this "say Delete failed!"
                 exit
-        fi
-}
+        fi      
+} 
+
+fdelete()
+{
+    say_this "say Deleting files 12 hours old or less!"
+    for i in $G12FILE; do echo "Files 12 hours or older on fdns $i"; done
+        if [ "$?" -eq "0" ]; then
+                echo "Delete successfull" >> $TSOURCE/$FL
+                say_this "say Delete successfull!"
+        else    
+                echo "Delete failed" >> $TSOURCE/$FL
+                say_this "say Delete failed!"
+                exit
+        fi      
+}  
+
+#fdelete()
+#{
+#    say_this "say Deleting files 12 hours old or less!"
+#    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +310 -print`; do echo "Deleting $i"; rm $i; done
+#        
+#        if [ "$?" -eq "0" ]; then
+#                echo "Delete successfull" >> $TSOURCE/$FL
+#                say_this "say Delete successfull!"
+#        else
+#                echo "Delete failed" >> $TSOURCE/$FL
+#                say_this "say Delete failed!"
+#                exit
+#        fi
+#}
 
 
 
@@ -51,22 +79,37 @@ send_log()
     fi
 }
 
-
 fcopy()
-{
+{   
     say_this "say Transfering files to NAS!"
-    for i in `find $TSOURCE/*tar.gz -maxdepth 1 -mmin +1 -print`; do echo "Moving $i to NAS!"; cp -n $i $CPDEST; done
-
+    for i in $GAFILE; do echo "Files that will copy $i"; cp -n $i $CPDEST; done
+        
         if [ "$?" -eq "0" ]; then
                 echo "Transfer successfull" >> $TSOURCE/$FL
                 say_this "say Transfer successfull!"
-        else
+        else    
                 echo "Transfer failed" >> $TSOURCE/$FL
                 say_this "say transfer failed!"
                 send_log
                 exit
         fi
 }
+
+#fcopy()
+#{
+#    say_this "say Transfering files to NAS!"
+#    for i in $GAFILE; do echo "Moving $i to NAS!"; cp -n $i $CPDEST; done
+#
+#        if [ "$?" -eq "0" ]; then
+#                echo "Transfer successfull" >> $TSOURCE/$FL
+#                say_this "say Transfer successfull!"
+#        else
+#                echo "Transfer failed" >> $TSOURCE/$FL
+#                say_this "say transfer failed!"
+#                send_log
+#                exit
+#        fi
+#}
 
 mount_checkNAS()
 {
@@ -213,7 +256,9 @@ backup_fun()
 
     fcopy
    
-    #fdelete
+    fdelete
+
+    fdelete_nas
 
 
     say_this "say Operations complete"
