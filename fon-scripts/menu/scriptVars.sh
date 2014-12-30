@@ -12,6 +12,6 @@ NOW=$(date +%Y-%m-%d.%H:%M:%S)
 EFROM="constraft@gmail.com"
 SMTP="smtp.gmail.com:587"
 ETO="fuzzyheadedfreak@gmail.com"
-EPASS="a5c6d7f8z9"
+EPASS=""
 FL="fuzzylog"
-ESEND="sendemail -f constraft@gmail.com -s smtp.gmail.com:587 -xu constraft@gmail.com -xp a5c6d7f8z9 -t fuzzyheadedfreak@gmail.com -o tls=yes -m "
+ESEND="sendemail -f constraft@gmail.com -s smtp.gmail.com:587 -xu constraft@gmail.com -xp  -t fuzzyheadedfreak@gmail.com -o tls=yes -m "
