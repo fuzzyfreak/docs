@@ -1,3 +1,0 @@
-find ~/backups/*tar.gz -maxdepth 1 -print | awk '{ print substr(,25); }'
-free -m | awk 'FNR<=2 { print }'
-find ~/backups/*tar.gz -maxdepth 1 -print | awk '{ print substr($1,25); }'
